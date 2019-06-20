@@ -44,7 +44,7 @@ class Users extends CI_Controller {
 			$this->load->view('templates/footer');
 		} else {
 			$this->users_model->set_user();
-			$this->load->view('users/success');
+			redirect('/users/');
 		}
 	}
 
