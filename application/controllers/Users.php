@@ -48,5 +48,15 @@ class Users extends CI_Controller {
 		}
 	}
 
+	public function delete($username = NULL) {
+		// $this->load->helper('session');
+		$data['user_detail'] = $this->users_model->get_users($username);
+		if (empty($data['user_detail'])){
+			show_404();
+		}
+		$this->users_model->delete_user($username);
+		// $this->session->set_flashdata('message', 'User '.$usernaem.' successfully deleted');
+		redirect('/users/');
+	}
 }
 ?>

@@ -81,7 +81,7 @@ $db['default'] = array(
 	'password' => 'password',
 	'database' => 'php_docker',
 	'dbdriver' => 'mysqli',
-	'dbprefix' => '',
+	'dbprefix' => 'office_',
 	'pconnect' => FALSE,
 	'db_debug' => (ENVIRONMENT !== 'production'),
 	'cache_on' => FALSE,
