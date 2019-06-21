@@ -57,21 +57,21 @@
 								<a href="#">Welcome, <!-- <cfOutput>#session.user.fName# #session.user.lName#</cfOutput> --></a>
 							</li>
 							<li>
-								<a href="/logout"><span class="glyphicon glyphicon-lock"></span> logout</a>
+								<a href="/officestatus/logout"><span class="glyphicon glyphicon-lock"></span> logout</a>
 							</li>
 						</ul>
 						<ul class="nav navbar-nav">
 							<!-- <li <cfIf sb.routing[1] EQ "status">class="active"</cfIf>> -->
 							<li>
-								<a href="/">Dashboard</a>
+								<a href="/officestatus/">Dashboard</a>
 							</li>
 							<!-- <li <cfIf sb.routing[1] EQ "employee">class="active"</cfIf>> -->
 							<li>
-								<a href="/users">Employees </a>
+								<a href="/officestatus/users">Employees </a>
 							</li>
 							<!-- <li <cfIf sb.routing[1] EQ "note">class="active"</cfIf>> -->
 							<li>
-								<a href="/status">Status </a>
+								<a href="/officestatus/status">Status </a>
 							</li>
 						</ul>
 					</div>

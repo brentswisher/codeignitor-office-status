@@ -53,7 +53,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 // $route['404_override'] = '';
 // $route['translate_uri_dashes'] = FALSE;
 
-$route['users/create'] = 'users/create';
+$route['users/create'] = 'users/edit/';
+$route['users/edit'] = 'users/edit/';
+$route['users/edit/(:any)'] = 'users/edit/$1';
 $route['users/delete/(:any)'] = 'users/delete/$1';
 $route['users/(:any)'] = 'users/view/$1';
 $route['users'] = 'users';

@@ -29,22 +29,27 @@ class Users extends CI_Controller {
 		$this->load->view('templates/footer');
 	}
 
-	public function create() {
+	public function edit($username = NULL) {
 		$this->load->helper('form');
 		$this->load->library('form_validation');
 
-		$data['title'] = 'Create a new user';
-
+		$data['user_detail'] = $this->users_model->get_users($username);
+		if (empty($data['user_detail'])){
+			$data['title'] = 'Create a new user';
+		} else {
+			$data['title'] = 'Edit user '.$data['user_detail']['username'];	
+		}
+		
 		$this->form_validation->set_rules('username', 'Username', 'required');
 		$this->form_validation->set_rules('firstName', 'First Name', 'required');
 
 		if ($this->form_validation->run() === FALSE) {
 			$this->load->view('templates/header', $data);
-			$this->load->view('users/create');
+			$this->load->view('users/edit', $data);
 			$this->load->view('templates/footer');
 		} else {
-			$this->users_model->set_user();
-			redirect('/users/');
+			$this->users_model->set_user($data['user_detail']['publicId']);
+			redirect('users/');
 		}
 	}
 

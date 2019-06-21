@@ -20,7 +20,7 @@
 	<?php } else { ?>
 	<?php foreach ($users as $user_item): ?>
 		<tr>
-			<td><?=$user_item['firstName'] . ' ' . $user_item['lastName'] ?></td>
+			<td><?=$user_item['lastName'] . ', ' . $user_item['firstName'] ?></td>
 			<td><?=$user_item['username']?></td>
 			<td>
 				<a class="btn btn-sm btn-primary" href="edit/<?=$user_item['username']?>">
