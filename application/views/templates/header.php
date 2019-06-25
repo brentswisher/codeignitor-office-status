@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title><?=$title ?></title>
+		<title>Office Status</title>
 			
 		<!-- Bootstrap -->
 		<link rel="stylesheet" type="text/css" href="/officestatus/assets/css/bootstrap.custom.min.css" />
@@ -47,7 +47,7 @@
 						</button>
 					<!-- </cfIf> -->
 					<a class="navbar-brand" href="index.htm">
-						<?=$title ?>
+						Office Status
 					</a>
 				</div>
 				<!-- <cfIf sb.isLoggedIn> -->
