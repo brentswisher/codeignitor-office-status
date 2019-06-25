@@ -67,5 +67,8 @@ $route['status/edit/(:any)'] = 'status/edit/$1';
 $route['status/delete/(:any)'] = 'status/delete/$1';
 $route['status'] = 'status';
 
-$route['default_controller'] = 'pages/view';
+//Dashboard Routes
+$route['dashboard'] = 'dashboard/index';
+
+$route['default_controller'] = 'dashboard/index';
 $route['(:any)'] = 'pages/view/$1';
