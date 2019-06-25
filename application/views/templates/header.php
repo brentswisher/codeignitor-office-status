@@ -7,7 +7,7 @@
 		<title><?=$title ?></title>
 			
 		<!-- Bootstrap -->
-		<link rel="stylesheet" type="text/css" href="<? echo base_url();?>assets/css/bootstrap.custom.min.css" />
+		<link rel="stylesheet" type="text/css" href="/officestatus/assets/css/bootstrap.custom.min.css" />
 
 		<style>
 			.navbar {
