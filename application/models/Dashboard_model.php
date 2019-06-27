@@ -9,6 +9,7 @@ class Dashboard_model extends CI_Model {
 		if ($username === FALSE) {
 			$this->db->select('
 				user.publicId,
+				user.username,
 				user.firstName,
 				user.lastName,
 				user.isAvailable,
@@ -19,12 +20,23 @@ class Dashboard_model extends CI_Model {
 			$this->db->join('status', 'user.statusId = status.statusId','left');
 			$this->db->order_by('lastName, firstName, username');
 			$query = $this->db->get();
-			//ON this page we want the users split into two groups
-			$users = array_chunk($query->result_array(), ceil(count($query->result_array()) / 2));
-			return $users;
+			return $query->result_array();
 		}
 
-		$query = $this->db->get_where('user', array('username' => $username));
+		$this->db->select('
+			user.publicId,
+			user.username,
+			user.firstName,
+			user.lastName,
+			user.isAvailable,
+			user.note,
+			status.publicId AS statusPublicId,
+			status.title AS status
+		');
+		$this->db->from('user');
+		$this->db->join('status', 'user.statusId = status.statusId','left');
+		$this->db->where(array('username' => $username));
+		$query = $this->db->get();
 		return $query->row_array();
 	}
 
