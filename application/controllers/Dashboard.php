@@ -18,10 +18,19 @@ class Dashboard extends CI_Controller {
 	}
 
 	public function status($username = NULL) {
-		//Note: This is only accesses via ajax and returns JSON
-		$data['users'] = $this->dashboard_model->get_users($username);
-		if (empty($data['users'])){
-			show_404();
+		$method = $this->input->method();
+		if($method == 'get'){
+			//Get current status
+			$data['response'] = $this->dashboard_model->get_users($username);
+			if (empty($data['response'])){
+				show_404();
+			}
+		} else if ($method == 'post') {
+			//Update a status
+			$data['response'] = $this->dashboard_model->set_user_status($username);
+			if (empty($data['response'])){
+				show_404();
+			}
 		}
 		$this->load->view('dashboard/api/status', $data);
 	}

@@ -30,131 +30,56 @@
 	}
 </style>
 
-<script>
-	var employeeStatus = '';
-
-	function updateEmployee(username) {
-		$.ajax({url: `status/${username}`, success: function(result){
-			loadModal(JSON.parse(result));
-		}});
-	}
-
-	function updateState(frm){
-		let username = $('#employee').val(username);
-		let isAvailable = $('#isAvailable').val(isAvailable);
-		let statusPublicId = $('#statusId').val(statusPublicId);
-		let note = $('#note').val(note);
-
-		$.ajax({
-			url: `status/${username}`,
-				success: function(result){
-					$('#statusModal').modal('hide');
-				}	
-		});
-
-	}
-	function loadModal( { username, isAvailable, note, statusPublicId } = emplyeeInfo ) {
-		console.log(arguments);
-		$('#employee').val(username);
-		$('#isAvailable').val(isAvailable);
-		$('#statusId').val(statusPublicId);
-		$('#note').val(note);
-		$('#statusModal').modal('show');
-	}
-
-	// function updateStatus() {
-	// 	var employeeId = $('#employeeId').val();
-
-	// 	$('#inOffice').val(employeeStatus[employeeId].inOffice);
-	// 	$('#noteId').val(employeeStatus[employeeId].noteId);
-	// 	$('#otherNote').val(employeeStatus[employeeId].otherNote);
-
-	// 	updateNote();
-	// }
-	// function updateNote() {
-	// 	checkOther();
-	// }
-	// function checkOther() {
-	// 	if ($('#note').val() != "") {
-	// 		$('#otherNote').show();
-	// 	} else {
-	// 		$('#otherNote').hide();
-	// 		$('#otherNote').val('');
-	// 	}
-	// }
-</script>
 <button type="button" class="btn btn-lg btn-primary" onClick="updateEmployee();"><span class="glyphicon glyphicon-user"></span> Update My Status</button>
 
 <div class="row">
 
 
 
-	<?php $splitUsers = array_chunk($users, ceil(count($users) / 2)); ?>
-	<div class="col-md-6">
-		<table class="table table-hover table-striped">
-			<thead>
-				<tr>
-					<th>
-						Name
-					</th>
-					<th>
-						Status
-					</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php foreach ($splitUsers[0] as $user_item): ?>
-					<tr onClick="updateEmployee('<?=$user_item['username']?>');">
-						<td><?=$user_item['lastName'] . ', ' . $user_item['firstName'] ?></td>
-						<td>
-							<span class="glyphicon glyphicon-<?= ($user_item['isAvailable'] == 1 ? 'ok' : 'remove') ?>-circle"></span>
-							 <?php
-							 	if(!empty($user_item['status'])){
-							 		echo '&nbsp;' . $user_item['status'];
-								};
-								if(!empty($user_item['note'])){
-							 		echo '&nbsp;(' . $user_item['note'] . ')';
-								};
-							?>
-						</td>
+	<?php
+		$splitUsers = array_chunk($users, ceil(count($users) / 2));  
+		foreach ($splitUsers as $user_subset): 
+	?>
+		<div class="col-md-6">
+			<table class="table table-hover table-striped">
+				<thead>
+					<tr>
+						<th>
+							Name
+						</th>
+						<th>
+							Status
+						</th>
 					</tr>
-				<?php endforeach; ?>
-			</tbody>
-		</table>
-	</div>
-	<div class="col-md-6">
-		<table class="table table-hover table-striped">
-			<thead>
-				<tr>
-					<th>
-						Name
-					</th>
-					<th>
-						Status
-					</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php foreach ($splitUsers[1] as $user_item): ?>
-					<tr onClick="updateEmployee();">
-						<td><?=$user_item['lastName'] . ', ' . $user_item['firstName'] ?></td>
-						<td>
-							<span class="glyphicon glyphicon-<?= ($user_item['isAvailable'] === 1 ? 'ok' : 'remove') ?>-circle"></span>
-							&nbsp; <?= $user_item['status'] ?>
-							&nbsp; <?= $user_item['note'] ?>
-						</td>
-					</tr>
-				<?php endforeach; ?>
-			</tbody>
-		</table>
-	</div>
+				</thead>
+				<tbody>
+					<?php foreach ($user_subset as $user_item): ?>
+						<tr data-user="<?=$user_item['username']?>" onClick="updateEmployee('<?=$user_item['username']?>');">
+							<td><?=$user_item['lastName'] . ', ' . $user_item['firstName'] ?></td>
+							<td class="status-column">
+								<span class="glyphicon glyphicon-<?= ($user_item['isAvailable'] == 1 ? 'ok' : 'remove') ?>-circle"></span>
+								 <?php
+								 	if(!empty($user_item['status'])){
+								 		echo '&nbsp;' . $user_item['status'];
+									};
+									if(!empty($user_item['note'])){
+								 		echo '&nbsp;(' . $user_item['note'] . ')';
+									};
+								?>
+							</td>
+						</tr>
+					<?php endforeach; ?>
+				</tbody>
+			</table>
+		</div>
+	<?php endforeach; ?>
 </div>
 
 <!-- <cfIf sb.isLoggedIn> -->
 	<div class="modal fade" id="statusModal" tabindex="-1" role="dialog">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form method="post" onSubmit="updateStatus(this)">
+				<form id="statusForm" method="post" onSubmit="return updateStatus(this)">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						<h4 class="modal-title">My Status</h4>
@@ -163,15 +88,12 @@
 						<div class="form-group">
 							<strong>Employee:</strong>
 							<br />
-							<select name="employee" id="employee" class="form-control">
+							<select name="employee" id="employee" class="form-control" onChange>
 								<?php foreach ($users as $user_item): ?>
 									<option value="<?=$user_item['username']?>">
 										<?= $user_item['lastName'] . ', ' . $user_item['firstName'] ?>
 									</option>
 								<?php endforeach ?>
-								<!-- <cfOutput query="qryEmployees">
-									<option value="#encodeForHTMLAttribute(qryEmployees.employeeId)#">#encodeForHTML(qryEmployees.fName)# #encodeForHTML(qryEmployees.lName)#</option>
-								</cfOutput> -->
 							</select>
 						</div>
 						<div class="form-group">
@@ -206,3 +128,66 @@
 		</div>
 	</div>
 <!-- </cfIf> -->
+
+<script>
+	var employeeStatus = '';
+
+	function updateEmployee(username) {
+		if(username !== undefined){
+			$.ajax({url: `/officestatus/dashboard/status/${username}`, success: function(result){
+				loadModal(JSON.parse(result));
+			}});	
+		} else {
+			resetModal();
+			$('#statusModal').modal('show');
+		}
+	}
+
+	function updateStatus(frm){
+		let username = $('#employee').val();
+		let isAvailable = $('#isAvailable').val();
+		let statusPublicId = $('#statusId').val();
+		let note = $('#note').val();
+		$.post({
+			url:`/officestatus/dashboard/status/${username}`,
+			data: $(frm).serialize(),
+			success: function(result,status){
+				if(status == 'success'){
+					let content = `<span class="glyphicon glyphicon-${ isAvailable == 1 ? 'ok' : 'remove'}-circle"></span>`;
+					if(statusPublicId !== ''){
+						content += `&nbsp; ${ $('#statusId option:selected').text()}`;
+					}
+					if(note !== ''){
+						content += `&nbsp; ${ note }`;
+					}
+
+					$('tr[data-user="'+username+'"] > .status-column').html(content);
+					$('#statusModal').modal('hide');
+					resetModal();
+				} else {
+					alert('There was a problem with your status update');
+				}
+			}	
+		});
+		return false;
+	}
+
+	function resetModal(){
+		$('#employee').val('');
+		$('#isAvailable').val(1);
+		$('#statusId').val('');
+		$('#note').val('');
+	}
+	function loadModal( { username, isAvailable, note, statusPublicId } = emplyeeInfo ) {
+		$('#employee').val(username);
+		$('#isAvailable').val(isAvailable);
+		$('#statusId').val(statusPublicId);
+		$('#note').val(note);
+		$('#statusModal').modal('show');
+	}
+	document.getElementById('employee').addEventListener('change', function(e,el){
+		updateEmployee(e.target.value);
+		console.log(e.target.value);
+	}); // FF & friends
+	
+</script>

@@ -40,31 +40,21 @@ class Dashboard_model extends CI_Model {
 		return $query->row_array();
 	}
 
-	// public function set_user($publicId = FALSE) {
-	// 	$this->load->helper('url');
+	public function set_user_status($username = FALSE) {
+		$data = array(
+			'username' => $username,
+			'statusId' => null,
+			'note' => $this->input->post('note'),
+			'isAvailable' => $this->input->post('isAvailable')
+		);
 
-	// 	$username = url_title($this->input->post('username'), 'dash', TRUE);
-	// 	$data = array(
-	// 		'publicId' => $this->input->post('publicId'),
-	// 		'username' => $username,
-	// 		'firstName' => $this->input->post('firstName'),
-	// 		'lastName' => $this->input->post('lastName')
-	// 	);
+		//Get the private statusId
+		$this->db->select('status.statusId');
+		$query = $this->db->get_where('status',array('publicId' => $this->input->post('statusId')));
+		$data['statusId'] =$query->row_array()['statusId'];
 
-	// 	if(empty($publicId)){
-	// 		return $this->db->insert('user', $data);
-	// 	} else {
-	// 		$this->db->where('publicId', $publicId);
-	// 		return $this->db->update('user', $data);	
-	// 	}
-		
-	// }
-	// public function delete_user($username = FALSE) {
-	// 	$this->load->helper('url');
-
-	// 	$username = url_title($username, 'dash', TRUE);
-
-	// 	return $this->db->delete('user', array('username' => $username));
-	// }
+		$this->db->where('username', $username);
+		return $this->db->update('user', $data);		
+	}
 }
 ?>
